@@ -6,6 +6,7 @@ from app.config import settings
 from app.logging_config import configure_logging
 from app.routers.analysis import router as analysis_router
 from app.routers.boilerplate import router as boilerplate_router
+from app.routers.summarize import router as summarize_router
 
 
 configure_logging()
@@ -21,6 +22,7 @@ app.add_middleware(
 
 app.include_router(analysis_router)
 app.include_router(boilerplate_router)
+app.include_router(summarize_router)
 
 @app.get("/health")
 async def health():

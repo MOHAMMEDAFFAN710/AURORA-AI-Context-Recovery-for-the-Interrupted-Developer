@@ -9,3 +9,4 @@ router = APIRouter(prefix="/api/boilerplate", tags=["boilerplate"])
 async def create_boilerplate(req: BoilerplateRequest) -> BoilerplateResponse:
     result = generate(req.kind, req.name, req.language)
     return BoilerplateResponse(name=result["name"], language=result["language"], content=result["content"])
+/
