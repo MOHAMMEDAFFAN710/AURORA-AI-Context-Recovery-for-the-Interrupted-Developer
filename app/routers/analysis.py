@@ -9,6 +9,7 @@ from app.db.mongo import get_db
 from app.models.session import new_session_document, to_public_session
 from bson import ObjectId
 from pymongo.errors import PyMongoError
+from app.services.deep_insights import extract_file_insights, build_folder_tree, detect_tech_stack, recent_activity_from_git
 
 router = APIRouter(prefix="/api", tags=["analysis"])
 
@@ -21,6 +22,10 @@ async def analyze(req: AnalyzeRequest) -> AnalysisResult:
     files_scanned, todos_raw, file_samples = scan_project(path, max_files=req.max_files)
     git_summary = summarize_recent_commits(path, limit=10)
     project_explanation, developer_briefing = await generate_explanations(file_samples, todos_raw, git_summary)
+    files_insights = extract_file_insights(file_samples)
+    folder_tree = build_folder_tree(path, max_depth=3)
+    tech_stack, docs_links = detect_tech_stack(path, file_samples)
+    recent_activity = recent_activity_from_git(git_summary)
     try:
         db = get_db()
         doc = new_session_document(
@@ -51,6 +56,12 @@ async def analyze(req: AnalyzeRequest) -> AnalysisResult:
         git_recent=commits,
         project_explanation=project_explanation,
         developer_briefing=developer_briefing,
+        files_insights=files_insights,
+        folder_tree=folder_tree,
+        tech_stack=tech_stack,
+        docs_links=docs_links,
+        recent_activity=recent_activity,
+        recent_files=recent_activity.get("files_recent", []),
     )
 
 

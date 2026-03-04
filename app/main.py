@@ -1,6 +1,7 @@
 import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse
 from app.config import settings
 from app.logging_config import configure_logging
 from app.routers.analysis import router as analysis_router
@@ -21,7 +22,10 @@ app.add_middleware(
 app.include_router(analysis_router)
 app.include_router(boilerplate_router)
 
-
 @app.get("/health")
 async def health():
     return {"status": "ok", "env": settings.environment}
+
+@app.get("/")
+async def root():
+    return RedirectResponse(url="/docs")

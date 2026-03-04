@@ -29,6 +29,12 @@ class AnalysisResult(BaseModel):
     git_recent: List[GitCommitSummary]
     project_explanation: str
     developer_briefing: str
+    files_insights: Optional[List[Dict[str, Any]]] = None
+    folder_tree: Optional[Dict[str, Any]] = None
+    tech_stack: Optional[List[str]] = None
+    docs_links: Optional[List[Dict[str, str]]] = None
+    recent_activity: Optional[Dict[str, Any]] = None
+    recent_files: Optional[List[str]] = None
 
 
 class SessionRecord(BaseModel):
