@@ -1,0 +1,20 @@
+from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
+from app.config import settings
+from typing import Optional
+
+_client: Optional[AsyncIOMotorClient] = None
+_db: Optional[AsyncIOMotorDatabase] = None
+
+
+def get_client() -> AsyncIOMotorClient:
+    global _client
+    if _client is None:
+        _client = AsyncIOMotorClient(settings.mongodb_uri)
+    return _client
+
+
+def get_db() -> AsyncIOMotorDatabase:
+    global _db
+    if _db is None:
+        _db = get_client()[settings.mongodb_db]
+    return _db
